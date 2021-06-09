@@ -1,0 +1,44 @@
+- name: install tomcat server
+  hosts: db
+  become: yes
+  tasks:
+   - name: Update & upgrade apt packages
+     apt:
+       upgrade: yes
+       update_cache: yes
+   - name: Install OpenJDK
+     apt:
+       name: openjdk-11-jdk
+       state: present
+   - name: Add Tomcat group
+     group:
+       name: tomcat
+   - name: Add Tomcat user
+     user:
+       name: tomcat
+       group: tomcat
+       home: /home/vagrant/tomcat
+       createhome: yes
+   - name: Create /opt/tomcat directory
+     file:
+       path: /opt/tomcat
+       state: directory
+       mode: 0755
+   - name: Download Tomcat server packages
+     get_url:
+       url: https://apachemirror.wuchna.com/tomcat/tomcat-9/v9.0.46/bin/apache-tomcat-9.0.46.tar.gz
+       dest: /opt/tomcat
+   - name: Extract Tomcat packages
+     unarchive:
+       src: /opt/tomcat/apache-tomcat-9.0.46.tar.gz
+       dest: /opt/tomcat
+       remote_src: yes
+   - name: Change permissions
+     file:
+       path: /opt/tomcat
+       owner: tomcat
+       group: tomcat
+       state: directory
+       recurse: yes
+   - name: Start Tomcat
+     shell: nohup /opt/tomcat/apache-tomcat-9.0.46/bin/startup.sh
