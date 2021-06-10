@@ -40,5 +40,7 @@
        group: tomcat
        state: directory
        recurse: yes
+   - name: Copying war file
+     command: cp /home/vagrant/addressbook-2.0.war /opt/tomcat/apache-tomcat-9.0.46/webapps
    - name: Start Tomcat
      shell: nohup /opt/tomcat/apache-tomcat-9.0.46/bin/startup.sh
