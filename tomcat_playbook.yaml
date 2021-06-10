@@ -1,5 +1,5 @@
 - name: install tomcat server
-  hosts: db
+  hosts: localhost
   become: yes
   tasks:
    - name: Update & upgrade apt packages
